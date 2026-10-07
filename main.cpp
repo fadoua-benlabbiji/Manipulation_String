@@ -9,7 +9,7 @@ using namespace std;
 
 bool Appartenir(string source, string chaine){
     int pos=0;
-    int compt;
+    int compt=0;
     for(int i=0;i<chaine.length();i++){
         pos=source.find(chaine[i],pos);
         if(pos==string::npos) return false;
@@ -20,6 +20,7 @@ bool Appartenir(string source, string chaine){
 
 int Appartenir_fichier_1(string nomfichier,string chaine){
     int comp=0;
+    int pos=0;
     ifstream fichier(nomfichier);
 
     if(!fichier){
@@ -30,16 +31,19 @@ int Appartenir_fichier_1(string nomfichier,string chaine){
     string courant;
 
     while(fichier >> courant){
-        if(courant.find(chaine)!=string::npos)
+            pos=0;
+       while((pos=courant.find(chaine,pos))!=string::npos){
             comp++;
+            pos = pos + chaine.length();
     }
-
+    }
     return comp;
 }
 
-int Appartenir_fichier_2(string nomfichier,string chaine){
+int Appartenir_fichier_2(string nomfichier,string chaine,string Replace){
     int comp=0;
     string courant;
+    int pos=0;
 
     ifstream fichier(nomfichier);
 
@@ -53,12 +57,21 @@ int Appartenir_fichier_2(string nomfichier,string chaine){
     while (fichier >> courant) {
         chains.push_back(courant);
     }
-
+    fichier.close();
     for (int i = 0; i < chains.size(); i++) {
-        if (chains[i].find(chaine) != string::npos)
+            pos=0;
+        while ((pos=chains[i].find(chaine,pos)) != string::npos){
             comp++;
-    }
+            chains[i].replace(pos,chaine.length(),Replace);
+            pos=pos+Replace.length();
+        }
 
+    }
+    ofstream fichier2(nomfichier);
+    for(int i=0;i<chains.size();i++){
+        fichier2 << chains[i] << " " ;
+    }
+    fichier2.close();
     return comp;
 }
 
@@ -79,12 +92,12 @@ int main(){
     */
 
     string nomFichier="text.txt";
-    string chaine;
+    string chaine,chaine2;
 
     cout << "Entrer la chaine a rechercher : ";
     cin >> chaine;
-
-
+    cout << "Entrer la chaine avec lequel on va remplacer : ";
+    cin >> chaine2;
     auto debut1 = std::chrono::high_resolution_clock::now();
 
     int resultat1 = Appartenir_fichier_1(nomFichier, chaine);
@@ -96,7 +109,7 @@ int main(){
 
     cout << "\n===== Methode 1 =====" << endl;
 
-    cout << "Nombre de mots contenant la chaine : "
+    cout << "Nombre d'occurrence de la sous-chaine : "
          << resultat1 << endl;
 
     cout << "Temps de recherche : "
@@ -107,7 +120,7 @@ cout << "Temps de recherche : "
 
     auto debut2 = std::chrono::high_resolution_clock::now();
 
-    int resultat2 = Appartenir_fichier_2(nomFichier, chaine);
+    int resultat2 = Appartenir_fichier_2(nomFichier, chaine,chaine2);
 
     auto fin2 = std::chrono::high_resolution_clock::now();
 
@@ -116,7 +129,7 @@ cout << "Temps de recherche : "
 
     cout << "\n===== Methode 2 =====" << endl;
 
-    cout << "Nombre de mots contenant la chaine : "
+    cout << "Nombre d'occurrence de la sous-chaine : "
          << resultat2 << endl;
 
     cout << "Temps de recherche : "
