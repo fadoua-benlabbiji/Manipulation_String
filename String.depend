@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1791218256 source:c:\users\elitebook\desktop\string\main.cpp
+	<iostream>
+	<string>
+	<fstream>
+	<string>
+	<fstream>
+	<vector>
+	<chrono>
+
