@@ -78,7 +78,7 @@ int main()
     return 0;
     */
 
-    string nomFichier="test.txt";
+    string nomFichier="text.txt";
     string chaine;
 
     cout << "Entrer la chaine a rechercher : ";
