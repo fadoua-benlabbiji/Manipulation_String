@@ -9,6 +9,7 @@ using namespace std;
 
 bool Appartenir(string source, string chaine){
     int pos=0;
+    int compt;
     for(int i=0;i<chaine.length();i++){
         pos=source.find(chaine[i],pos);
         if(pos==string::npos) return false;
@@ -17,7 +18,7 @@ bool Appartenir(string source, string chaine){
     return true;
 }
 
-bool Appartenir_fichier_1(string nomfichier,string chaine){
+int Appartenir_fichier_1(string nomfichier,string chaine){
     int comp=0;
     ifstream fichier(nomfichier);
 
@@ -29,14 +30,14 @@ bool Appartenir_fichier_1(string nomfichier,string chaine){
     string courant;
 
     while(fichier >> courant){
-        if(courant==chaine)
-            return true;
+        if(courant.find(chaine)!=string::npos)
+            comp++;
     }
 
-    return false;
+    return comp;
 }
 
-bool Appartenir_fichier_2(string nomfichier,string chaine){
+int Appartenir_fichier_2(string nomfichier,string chaine){
     int comp=0;
     string courant;
 
@@ -54,15 +55,14 @@ bool Appartenir_fichier_2(string nomfichier,string chaine){
     }
 
     for (int i = 0; i < chains.size(); i++) {
-        if (chains[i] == chaine)
-            return true;
+        if (chains[i].find(chaine) != string::npos)
+            comp++;
     }
 
-    return false;
+    return comp;
 }
 
-int main()
-{
+int main(){
     /*
     string s,ch;
     cout << "Veuillez entrer une chaine : ";
@@ -87,7 +87,7 @@ int main()
 
     auto debut1 = std::chrono::high_resolution_clock::now();
 
-    bool resultat1 = Appartenir_fichier_1(nomFichier, chaine);
+    int resultat1 = Appartenir_fichier_1(nomFichier, chaine);
 
     auto fin1 = std::chrono::high_resolution_clock::now();
 
@@ -96,18 +96,18 @@ int main()
 
     cout << "\n===== Methode 1 =====" << endl;
 
-    if (resultat1)
-        cout << "Chaine trouvee." << endl;
-    else
-        cout << "Chaine non trouvee." << endl;
+    cout << "Nombre de mots contenant la chaine : "
+         << resultat1 << endl;
 
     cout << "Temps de recherche : "
          << temps1.count() << " ns" << endl;
+cout << "Temps de recherche : "
+     << temps1.count() / 1000000000.0 << " secondes" << endl;
 
 
     auto debut2 = std::chrono::high_resolution_clock::now();
 
-    bool resultat2 = Appartenir_fichier_2(nomFichier, chaine);
+    int resultat2 = Appartenir_fichier_2(nomFichier, chaine);
 
     auto fin2 = std::chrono::high_resolution_clock::now();
 
@@ -116,14 +116,13 @@ int main()
 
     cout << "\n===== Methode 2 =====" << endl;
 
-    if (resultat2)
-        cout << "Chaine trouvee." << endl;
-    else
-        cout << "Chaine non trouvee." << endl;
+    cout << "Nombre de mots contenant la chaine : "
+         << resultat2 << endl;
 
     cout << "Temps de recherche : "
          << temps2.count() << " ns" << endl;
-
+    cout << "Temps de recherche : "
+     << temps2.count() / 1000000000.0 << " secondes" << endl;
 
     cout << "\n===== Comparaison =====" << endl;
 
